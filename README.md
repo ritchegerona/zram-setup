@@ -1,57 +1,126 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-![Last Commit](https://img.shields.io/github/last-commit/ritchelinuxlab/zram-setup)
-![Stars](https://img.shields.io/github/stars/ritchelinuxlab/zram-setup?style=social)
+[![ShellCheck](https://github.com/ritchegerona/zram-setup/workflows/ShellCheck/badge.svg)](https://github.com/ritchegerona/zram-setup/actions)
+![Last Commit](https://img.shields.io/github/last-commit/ritchegerona/zram-setup)
+![Stars](https://img.shields.io/github/stars/ritchegerona/zram-setup?style=social)
 
-# 🌀 ZRAM Setup for Arch Linux & Debian
+# 🌀 ZRAM Setup for Linux
 
-This repository provides simple Bash scripts to configure **ZRAM swap** on Arch Linux and Debian-based systems.
+Configure **ZRAM swap** on multiple Linux distributions. Boosts performance, reduces SSD wear, and optimizes memory using compressed RAM swap.
 
 ## Features
-- Sets up zram-tools
-- Configures 100% RAM swap with zstd compression
-- Disables disk-based swap (optional)
-- Enables the ZRAM service at boot
 
-## 📂 Contents
-- `arch/`   → Script for Arch Linux (uses `zram-generator`)
-- `debian/` → Script for Debian 12/13, Ubuntu 24.04 (uses `zram-tools`)
+- Multi-distro support: Debian/Ubuntu, Arch Linux, Fedora/RHEL, openSUSE
+- Interactive configuration with sensible defaults
+- Automatic detection and disabling of existing swap
+- Multiple swap size options (25%, 50%, 100%, or custom)
+- Multiple compression algorithms (zstd, lz4, lz0)
+- Multi-device support for better multi-core performance
+- Dry-run mode to preview changes
+- Uninstall script to cleanly remove configuration
+- Logging to `/var/log/zram-setup.log`
 
 ## 📦 Installation
 
-Clone the repository:
 ```bash
-git clone https://github.com/ritchelinuxlab/zram-setup.git
+git clone https://github.com/ritchegerona/zram-setup.git
 cd zram-setup
+chmod +x setup-zram.sh uninstall-zram.sh
 ```
 
-▶️ Usage
+## ▶️ Usage
+
+### Interactive Mode (recommended)
 ```bash
-chmod +x setup-zram.sh
-./setup-zram.sh
+sudo ./setup-zram.sh
 ```
-✅ Verification
-Check if ZRAM is enabled:
+
+### Non-interactive Mode
 ```bash
+sudo ./setup-zram.sh -y
+```
+
+### Custom Configuration
+```bash
+# Set swap size to 50% with lz4 compression
+sudo ./setup-zram.sh -s 50 -c lz4
+
+# Dry-run to preview changes
+./setup-zram.sh -n
+```
+
+### Command-line Options
+| Option | Description |
+|--------|-----------|
+| `-s, --size SIZE` | Swap size as percentage of RAM (25, 50, 100, or custom) |
+| `-c, --compression ALGO` | Compression algorithm: zstd, lz4, lz0 |
+| `-d, --devices NUM` | Number of zram devices (1-4) |
+| `-y, --yes` | Non-interactive mode, accept defaults |
+| `-n, --dry-run` | Preview changes without applying |
+| `-h, --help` | Show help message |
+| `-v, --version` | Show version |
+
+## ✅ Verification
+
+After running the setup, verify ZRAM is working:
+
+```bash
+# Check swap devices
 cat /proc/swaps
+
+# Check memory usage
 free -h
+
+# Check ZRAM devices specifically
 zramctl
 ```
-🧹 Rollback
 
-Arch
+## 🧹 Uninstall/Rollback
+
+To remove ZRAM configuration and optionally restore disk swap:
+
 ```bash
-sudo systemctl disable --now systemd-zram-setup@zram0.service
+sudo ./uninstall-zram.sh
 ```
 
-Debian
+The uninstall script will:
+- Stop and disable ZRAM services
+- Remove configuration files
+- Restore original swap from backup (if available)
+- Optionally remove installed packages
+
+## 🔧 Troubleshooting
+
+### Swap not enabled after reboot
 ```bash
-sudo systemctl disable --now zramswap.service
+# Check service status
+systemctl status zramswap.service    # Debian/Ubuntu
+systemctl status systemd-zram-setup@zram0.service  # Arch/Fedora/openSUSE
+
+# Reload systemd daemon
+sudo systemctl daemon-reload
 ```
 
+### Check compression algorithm available
+```bash
+# List available algorithms
+zcat -h 2>&1 | grep -o -E '^[a-z0-9]+'
 
-📜 License
+# Or check kernel config
+grep CONFIG_ZRAM_DEF_COMP /boot/config-$(uname -r)
+```
 
-This project is licensed under the MIT License.
+### Performance tuning
+Add to `/etc/sysctl.d/99-zram.conf`:
+```
+vm.swappiness=100        # Aggressive swapping to ZRAM
+vm.vfs_cache_pressure=50   # Balance file cache vs app memory
+```
 
+## 📜 License
 
+This project is licensed under the MIT License - see [LICENSE.md](LICENSE.md) for details.
 
+## 🙏 Acknowledgments
+
+- Inspired by zram-generator documentation
+- Tested on Debian 12, Ubuntu 24.04, Arch Linux, Fedora 40

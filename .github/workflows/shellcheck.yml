@@ -1,0 +1,26 @@
+name: ShellCheck
+
+on:
+  push:
+    paths:
+      - '**.sh'
+      - '.github/workflows/shellcheck.yml'
+  pull_request:
+    paths:
+      - '**.sh'
+      - '.github/workflows/shellcheck.yml'
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Run ShellCheck
+        uses: ludeeus/action-shellcheck@v2
+        with:
+          severity: style
+          files: |
+            setup-zram.sh
+            uninstall-zram.sh
