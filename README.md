@@ -5,6 +5,10 @@
 
 # 🌀 ZRAM Setup for Linux
 
+<p align="center">
+  <img src="logo.png" alt="ZRAM Logo" width="300"/>
+</p>
+
 Configure **ZRAM swap** on multiple Linux distributions. Boosts performance, reduces SSD wear, and optimizes memory using compressed RAM swap.
 
 ## Features
