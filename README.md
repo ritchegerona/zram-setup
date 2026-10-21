@@ -1,4 +1,4 @@
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE.md)
 [![ShellCheck](https://github.com/ritchegerona/zram-setup/workflows/ShellCheck/badge.svg)](https://github.com/ritchegerona/zram-setup/actions)
 ![Last Commit](https://img.shields.io/github/last-commit/ritchegerona/zram-setup)
 ![Stars](https://img.shields.io/github/stars/ritchegerona/zram-setup?style=social)
@@ -17,7 +17,7 @@ Configure **ZRAM swap** on multiple Linux distributions. Boosts performance, red
 - Interactive configuration with sensible defaults
 - Automatic detection and disabling of existing swap
 - Multiple swap size options (25%, 50%, 100%, or custom)
-- Multiple compression algorithms (zstd, lz4, lz0)
+- Multiple compression algorithms (zstd, lz4, lzo)
 - Multi-device support for better multi-core performance
 - Dry-run mode to preview changes
 - Uninstall script to cleanly remove configuration
@@ -56,7 +56,7 @@ sudo ./setup-zram.sh -s 50 -c lz4
 | Option | Description |
 |--------|-----------|
 | `-s, --size SIZE` | Swap size as percentage of RAM (25, 50, 100, or custom) |
-| `-c, --compression ALGO` | Compression algorithm: zstd, lz4, lz0 |
+| `-c, --compression ALGO` | Compression algorithm: zstd, lz4, lzo |
 | `-d, --devices NUM` | Number of zram devices (1-4) |
 | `-y, --yes` | Non-interactive mode, accept defaults |
 | `-n, --dry-run` | Preview changes without applying |
