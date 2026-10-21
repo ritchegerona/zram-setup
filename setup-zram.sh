@@ -53,7 +53,7 @@ USAGE:
 
 OPTIONS:
     -s, --size SIZE      Swap size as percentage of RAM (25, 50, 100, or custom)
-    -c, --compression ALGO  Compression algorithm (zstd, lz4, lz0)
+    -c, --compression ALGO  Compression algorithm (zstd, lz4, lzo)
     -d, --devices NUM    Number of zram devices (1-4)
     -y, --yes            Non-interactive mode, accept defaults
     -n, --dry-run        Preview changes without applying
@@ -174,12 +174,12 @@ interactive_prompts() {
     echo "Select compression algorithm:"
     echo "  1) zstd - Best compression ratio (default)"
     echo "  2) lz4 - Fastest compression"
-    echo "  3) lz0 - Legacy algorithm"
+    echo "  3) lzo - Legacy algorithm"
     read -rp "Choice [1]: " comp_choice
     case "${comp_choice:-1}" in
         1) COMPRESSION_ALGO=zstd ;;
         2) COMPRESSION_ALGO=lz4 ;;
-        3) COMPRESSION_ALGO=lz0 ;;
+        3) COMPRESSION_ALGO=lzo ;;
         *) COMPRESSION_ALGO=zstd ;;
     esac
 

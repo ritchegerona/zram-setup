@@ -8,7 +8,7 @@ All notable changes to this project will be documented in this file.
 - **Interactive configuration prompts** - Users can now select swap size, compression algorithm, and number of devices at runtime
 - **Command-line arguments**:
   - `-s, --size` - Swap size as percentage of RAM (25, 50, 100, or custom)
-  - `-c, --compression` - Compression algorithm (zstd, lz4, lz0)
+  - `-c, --compression` - Compression algorithm (zstd, lz4, lzo)
   - `-d, --devices` - Number of zram devices (1-4)
   - `-y, --yes` - Non-interactive mode
   - `-n, --dry-run` - Preview changes without applying
